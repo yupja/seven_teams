@@ -1,9 +1,11 @@
 package com.nautical99diary.nautical99diary.controller;
 
 import com.nautical99diary.nautical99diary.domain.Todo;
+import com.nautical99diary.nautical99diary.domain.UserDetailsImpl;
 import com.nautical99diary.nautical99diary.dto.*;
 import com.nautical99diary.nautical99diary.service.TodoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,13 +17,13 @@ public class TodoController {
     private final TodoService todoService;
 
     @GetMapping("/todo/{goalDay}")
-    public List<Todo> getTodo(@PathVariable String goalDay) {
-        return todoService.getTodo(goalDay);
+    public List<Todo> getTodo(@PathVariable String goalDay,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return todoService.getTodo(goalDay,userDetails);
     }
 
     @PostMapping("/todo/{goalDay}")
-    public Todo createTodo(@PathVariable String goalDay, @RequestBody TodoRequestDto todoRequestDto) {
-        return todoService.createTodo(goalDay, todoRequestDto);
+    public Todo createTodo(@PathVariable String goalDay, @RequestBody TodoRequestDto todoRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return todoService.createTodo(goalDay, todoRequestDto,userDetails);
 
     }
 
