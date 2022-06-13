@@ -4,6 +4,7 @@ import com.nautical99diary.nautical99diary.domain.User;
 import com.nautical99diary.nautical99diary.dto.UserRequestDto;
 import com.nautical99diary.nautical99diary.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,13 +13,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
     public boolean saveUser(UserRequestDto userRequestDto) {
         singUpValid(userRequestDto);
         return userRepository.findById(
                 userRepository.save(
-                        new User(userRequestDto)
+                        new User(
+                                userRequestDto,
+                                bCryptPasswordEncoder
+                        )
                 ).getId()
         ).isPresent();
     }
