@@ -3,12 +3,13 @@ package com.nautical99diary.nautical99diary.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
+import org.springframework.web.cors.*;
 
 @Configuration
 @EnableWebSecurity
@@ -26,6 +27,8 @@ public class SecurityConfig {
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http.csrf().disable()
+                        .cors().configurationSource(corsConfigurationSource())
+                    .and()
                     .authorizeHttpRequests((authz) -> {
                                 try {
                                     authz
@@ -50,8 +53,31 @@ public class SecurityConfig {
                                 }
                             }
                     );
-
             return http.build();
         }
+
+
+
+
+        // CORS 허용 적용
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
+            CorsConfiguration configuration = new CorsConfiguration();
+            configuration.addAllowedOrigin("http://localhost:3000");
+            configuration.addAllowedHeader("Content-Type");
+            configuration.addAllowedHeader("Custom-Header");
+            configuration.addAllowedMethod(HttpMethod.POST);
+            configuration.addAllowedMethod(HttpMethod.GET);
+            configuration.addAllowedMethod(HttpMethod.POST);
+            configuration.addAllowedMethod(HttpMethod.PUT);
+            configuration.addAllowedMethod(HttpMethod.OPTIONS);
+            configuration.addAllowedMethod(HttpMethod.DELETE);
+            configuration.setAllowCredentials(true);
+
+            UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+            source.registerCorsConfiguration("/**", configuration);
+            return source;
+        }
+
     }
 }
