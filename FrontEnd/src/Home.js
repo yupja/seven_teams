@@ -3,10 +3,8 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { loadWriteFB, addWriteFB } from "./redux/modules/write";
-import { loadTodo } from "./redux/modules/axios";
+import { loadTodo, postTodo, deleteTodo} from "./redux/modules/write";
 
-import axios from "axios";
 import Header from "./Header";
 
 const Home = (props) => {
@@ -15,26 +13,23 @@ const Home = (props) => {
 
   const write_ref = React.useRef(null);
 
+  const write_data = useSelector((state) => state.write);
+  console.log(write_data); 
+  
   React.useEffect(() => {
     dispatch(loadTodo());
   }, []);
-  // 렌더링 될 때마다 실행 됨
-  // useEffect가 middleware를 실행시켜줌
-  // useEffect 안에 [value] =  화면에 value값이 변경될 때 실행
-  // 빈칸은 화면에 첫 렌더링이 될 때 실행
 
-  const addWriteList = () => {
+  const postTodoList = () => {
     dispatch(
-      addWriteFB({
-        write: write_ref.current?.value,
+      postTodo({
+        write: write_ref.current.value,
         checkComplete: false,
       })
     );
   };
-  const write_data = useSelector((state) => state.write);
-  // FB 콜렉션 write 불러오기
-  // console.log(write_data);
-  // 리듀서된 state를 가져와서 write_data에 넣어줘
+
+
 
   return (
     <>
@@ -53,7 +48,9 @@ const Home = (props) => {
               <Todo key={index}>
                 <span>{list.todo}</span>
                 <button>완료</button>
-                <button>삭제</button>
+                <button onClick={() => {
+                dispatch(deleteTodo(list.todo));
+              }}>삭제</button>
                 <button>수정</button>
               </Todo>
             );
@@ -67,7 +64,8 @@ const Home = (props) => {
         <button
           className="Plus"
           onClick={() => {
-            addWriteList();
+            postTodoList();
+
             // navigate("/Todo");
           }}
         >

@@ -8,6 +8,17 @@ const Home = (props) => {
 
   const navigate = useNavigate();
 
+  const addWriteList = () => {
+    dispatch(
+      addWriteFB({
+        write: write_ref.current?.value,
+        img_url: file_link_ref.current?.url,
+      })
+    );
+    navigate("/");
+  };
+
+
   return (
     <>
     <Header/>

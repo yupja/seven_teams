@@ -1,16 +1,12 @@
 // write.js
-import {
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  doc,
-  deleteDoc,
-} from "firebase/firestore";
+import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 
 // Actions
 const LOAD = "write/LOAD";
 const ADD = "write/ADD";
+const UPDATE = "write/UPDATE";
+const DELETE = "write/DELETE";
 
 const initialState = {
   list: [
@@ -24,7 +20,6 @@ const initialState = {
       checkComplete: "true",
       goalDay: "220616",
     },
-    
   ],
 };
 
@@ -33,47 +28,70 @@ export function loadWrite(write_list) {
   return { type: LOAD, write_list };
 }
 
-export function addWrite(write) {
-  return { type: ADD, write };
+export function postWrite(write) {
+  return { type: POST, write };
 }
 
-// 미들웨어 가져오기
-export const loadWriteFB = () => {
-  return async function (dispatch) {
-    const write_data = await getDocs(collection(db, "write"));
-    let write_list = [];
-    // console.log(write_data);
-    // firebase 콜렉션 db에서 write를 가져올거야, 콘솔확인
-    // 빈 배열 하나 만들어주고
+// axios 가져오기
+export const loadTodo = () => {
+  return function (dispatch) {
+    axios
+      .get("http://whitewise.shop/todo/101010")
+      .then((response) => {
+        // console.log(response.data);
+        const write_list = [];
 
-    write_data.forEach((b) => {
-      write_list.push({ id: b.id, ...b.data() });
-      // write_data를 하나씩 배열 데이터로 만들어줍시다!
-      // 콘솔로 확인해요!
-      // console.log(b.id, b.data());
-      // write_list 빈 배열에 하나씩 넣어줘
-    });
+        response.data.forEach((b) => {
+          write_list.push({ todo: b.todo });
+        });
+        console.log(write_list);
+        dispatch(loadWrite(write_list));
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
 
-    dispatch(loadWrite(write_list));
-    // 잘 만들어졌는 지 리스트도 확인해봐요! :)
-    // console.log(write_list);
-    // loadwrite(write_list) = Load Type에 FB 데이터를 디스패치 보내
+    // history.push("/login");
   };
 };
 
-// 미들웨어 추가하기
-export const addWriteFB = (write) => {
-  return async function (dispatch) {
-    console.log(write);
-    const docRef = await addDoc(collection(db, "write"), write);
-    const write_data = { id: docRef.id, ...write };
-    dispatch(addWrite(write_data));
-    // 추가하는것도 비동기 작업이다 그래서 async,await로 차례대로하자
-    // await =  addDoc 작업 끝날때까지 기다렸다가 답주고가
-    // addDoc((db,콜렉션이름, 추가할데이터 함수로 받아온 write))
+// axios 추가하기
+export const postTodo = (write) => {
+  // let data = {
+  //   todo : todo,
+  //   checkComplet : checkComplete,
+  // };
+  return function (dispacth) {
+    axios
+      .post("http://whitewise.shop/todo/101010", write)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+
+    // history.push("/login");
   };
 };
 
+// axios 삭제하기
+export const deleteTodo = () => {
+  return function (dispacth) {
+    axios
+      .delete("http://whitewise.shop/todo/101010")
+      .then((response) => {
+        console.log(response);
+        // console.log(write_data);
+        // dispatch(deleteTodo(list.todo[index]));
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+
+    // history.push("/login");
+  };
+};
 
 // Reducer
 export default function reducer(state = initialState, action = {}) {
@@ -83,12 +101,12 @@ export default function reducer(state = initialState, action = {}) {
     }
     // 리듀서를 내보낼건데 state= 값이 없으면 init초기값을 보여줘
     // 액션 타입을 case로 swith 해보자
-    // 미들웨어에서 디스패치한 wirte_list를
+    // 미들웨어에서 디스패치한 write_list를
     // list에 넣어서 보여줘
 
     case "write/ADD": {
       console.log("이제 값을 넣을꺼야!");
-      const new_write_list = [...state.list, action.write];
+      const new_write_list = [action.write];
       return { ...state, list: new_write_list };
     }
     // console.log({list: new_write_list});
@@ -96,6 +114,14 @@ export default function reducer(state = initialState, action = {}) {
     // 액션에 createWrite이 디스패치되어 case를 switch했다,
     // 리턴값은 리스트에 새로운 버킷리스트를 넣어줄거야
 
+    case "write/DELETE": {
+      console.log(state, action);
+      const new_write_list = state.list.filter((l, idx) => {
+        // 리스트를 나열하고 클릭했을때 나오는 인덱스가 맞으면 빼줘
+        return parseInt(action.write_index) !== idx;
+      });
+      return { ...state, list: new_write_list };
+    }
     default:
       return state;
   }
