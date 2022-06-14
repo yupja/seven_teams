@@ -1,10 +1,34 @@
 import React from "react";
 import styled from "styled-components";
+import { loginCO } from "./redux/modules/user";
+
+import { useDispatch } from "react-redux";
 
 import Header from "./Header"
+import { Navigate, useNavigate } from "react-router";
 
 
 const Login = () => {
+    const dispatch = useDispatch();
+    const Navigate = useNavigate();
+
+    const id_ref = React.useRef();
+    const pw_ref = React.useRef();
+    
+
+    const LoginDispatch = () => {
+        if(id_ref === '' || pw_ref === '' ){
+            window.alert("아이디/비밀번호를 입력하세요.")
+            return;
+        }
+        console.log(id_ref.current.value, pw_ref.current.value);
+        dispatch(loginCO(
+            id_ref.current.value,
+            pw_ref.current.value
+        ))
+        Navigate("/");
+    }
+
     return (
         <>
         <Header/>
@@ -13,16 +37,18 @@ const Login = () => {
             <Ul>
                 <Li>
                     <Text>아이디</Text>
-                    <Input></Input>
+                    <Input ref={id_ref}></Input>
                 </Li>
                 <Li>
                     <Text>비밀번호</Text>
-                    <Input></Input>
+                    <Input ref={pw_ref}></Input>
                 </Li>
             </Ul>
 
-            <Btnlog>로그인</Btnlog>
-            <Btnsign>회원가입</Btnsign>
+            <Btnlog onClick={LoginDispatch}>로그인</Btnlog>
+            <Btnsign onClick={() => {
+                Navigate(`/signup`)
+            }}>회원가입</Btnsign>
         </Box>
         </>
     )

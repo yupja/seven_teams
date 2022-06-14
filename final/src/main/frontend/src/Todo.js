@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 import Header from "./Header"
 
-const Home = (props) => {
 
+const Home = (props) => {
   const navigate = useNavigate();
 
   return (
