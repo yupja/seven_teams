@@ -19,6 +19,15 @@ import static com.nautical99diary.nautical99diary.config.handler.LoginSuccessHan
 @EnableGlobalMethodSecurity(securedEnabled = true) // @Secured 어노테이션 활성화
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final String[] AUTH_WHITELIST = {
+            "/",
+            "/h2-console/**",
+            "/user/signup",
+            "/user/idCheck/**",
+            "/user/nicknameCheck/**",
+            "/test"
+    };
+
     @Bean
     public BCryptPasswordEncoder encodePassword() {
         return new BCryptPasswordEncoder();
@@ -69,20 +78,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .cors().configurationSource(corsConfigurationSource());
-        http
-                .addFilterBefore(formLoginFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        http.addFilterBefore(formLoginFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http.authorizeRequests()
-                    .antMatchers("/").permitAll()
-                    .antMatchers("/h2-console/**").permitAll()
-                    .antMatchers("/user/signup").permitAll()
-                    .antMatchers("/user/idCheck/**").permitAll()
-                    .antMatchers("/user/nicknameCheck/**").permitAll()
-                    .antMatchers("/test").permitAll()
-                    .anyRequest()
-                    .permitAll()
-                .and()
-                    .formLogin().disable();
+                    .antMatchers(AUTH_WHITELIST).permitAll();
+
+        http.formLogin().disable();
     }
 
 }
