@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { loadTodo, postTodo, deleteTodo} from "./redux/modules/write";
+import { loadTodo, postTodo, deleteTodo } from "./redux/modules/write";
 
 import Header from "./Header";
 
@@ -13,9 +13,10 @@ const Home = (props) => {
 
   const write_ref = React.useRef(null);
 
-  const write_data = useSelector((state) => state.write);
-  console.log(write_data); 
-  
+  const write_data = useSelector((state) => state.write.list);
+
+  console.log(write_data);
+
   React.useEffect(() => {
     dispatch(loadTodo());
   }, []);
@@ -23,14 +24,13 @@ const Home = (props) => {
   const postTodoList = () => {
     dispatch(
       postTodo({
-        write: write_ref.current.value,
+        todo: write_ref.current.value,
         checkComplete: false,
       })
     );
   };
 
-
-
+  console.log(write_data);
   return (
     <>
       <Header />
@@ -38,19 +38,23 @@ const Home = (props) => {
       <Container>
         <Date>
           <button>◀</button>
-          <p>{write_data.list[0].goalDay}</p>
+          <p> 6 / 17 </p>
           <button>▶</button>
         </Date>
 
         <Box>
-          {write_data.list.map((list, index) => {
+          {write_data.map((list, index) => {
             return (
               <Todo key={index}>
                 <span>{list.todo}</span>
                 <button>완료</button>
-                <button onClick={() => {
-                dispatch(deleteTodo(list.todo));
-              }}>삭제</button>
+                <button
+                  onClick={() => {
+                    dispatch(deleteTodo(list.id));
+                  }}
+                >
+                  삭제
+                </button>
                 <button>수정</button>
               </Todo>
             );
