@@ -1,7 +1,6 @@
 package com.nautical99diary.nautical99diary.controller;
 
 import com.nautical99diary.nautical99diary.dto.UserRequestDto;
-import com.nautical99diary.nautical99diary.repository.UserRepository;
 import com.nautical99diary.nautical99diary.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

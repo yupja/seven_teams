@@ -2,8 +2,6 @@ package com.nautical99diary.nautical99diary.dto;
 
 import lombok.*;
 
-import javax.persistence.Column;
-
 @Setter
 @Getter
 @NoArgsConstructor

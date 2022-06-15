@@ -1,6 +1,5 @@
 package com.nautical99diary.nautical99diary.domain;
 
-import com.nautical99diary.nautical99diary.config.auth.PrincipalDetails;
 import com.nautical99diary.nautical99diary.domain.resultType.Timestamped;
 import com.nautical99diary.nautical99diary.dto.TodoRequestDto;
 import lombok.*;

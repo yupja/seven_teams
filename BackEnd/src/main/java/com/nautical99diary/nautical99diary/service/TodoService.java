@@ -1,6 +1,5 @@
 package com.nautical99diary.nautical99diary.service;
 
-
 import com.nautical99diary.nautical99diary.config.jwt.JwtDecoder;
 import com.nautical99diary.nautical99diary.domain.Todo;
 import com.nautical99diary.nautical99diary.dto.*;
@@ -9,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
 
 import static ch.qos.logback.classic.PatternLayout.HEADER_PREFIX;
 import static com.nautical99diary.nautical99diary.config.handler.LoginSuccessHandler.TOKEN_TYPE;
@@ -24,31 +23,31 @@ public class TodoService {
 
     public List<Todo> getTodo(String day, String token) {
         String username = test(token);
-        return todoRepository.findAllByGoalDayAndUsername(day,username);
+        return todoRepository.findAllByGoalDayAndUsername(day, username);
     }
 
     public Todo createTodo(String day, TodoRequestDto todoRequestDto, String token) {
         String username = test(token);
-        Todo todo = new Todo(day, todoRequestDto,username);
+        Todo todo = new Todo(day, todoRequestDto, username);
         todoRepository.save(todo);
         return todo;
     }
 
     public UpdateDto.TodoUpdate updateTodo(Long id, UpdateDto.TodoUpdate requestDto, String token) {
         Todo todo = todoRepository.findAllById(id);
-        if(todo.getUsername().equals(test(token))){
+        if (todo.getUsername().equals(test(token))) {
             return repositoryJPQL.updateTodo(requestDto);
-        }else{
+        } else {
             throw new IllegalArgumentException("회원 정보가 일치하지 않습니다");
         }
 
     }
 
-    public UpdateDto.CompletionUpdate updateComplete(Long id,UpdateDto.CompletionUpdate requestDto, String token) {
+    public UpdateDto.CompletionUpdate updateComplete(Long id, UpdateDto.CompletionUpdate requestDto, String token) {
         Todo todo = todoRepository.findAllById(id);
-        if(todo.getUsername().equals(test(token))){
+        if (todo.getUsername().equals(test(token))) {
             return repositoryJPQL.updateComplete(requestDto);
-        }else{
+        } else {
             throw new IllegalArgumentException("회원 정보가 일치하지 않습니다");
         }
 
@@ -56,9 +55,9 @@ public class TodoService {
 
     public void deleteTodo(Long id, String token) {
         Todo todo = todoRepository.findAllById(id);
-        if(todo.getUsername().equals(test(token))){
+        if (todo.getUsername().equals(test(token))) {
             repositoryJPQL.deleteTodo(id);
-        }else{
+        } else {
             throw new IllegalArgumentException("회원 정보가 일치하지 않습니다");
         }
 

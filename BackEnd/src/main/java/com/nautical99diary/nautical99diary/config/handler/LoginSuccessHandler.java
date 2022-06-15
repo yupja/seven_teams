@@ -7,7 +7,7 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 
 import javax.servlet.http.*;
 
-import java.util.*;
+import java.util.Optional;
 
 /*
  * 인증이 완료되면 사용자 정보를 가진 Authentication 객체를

@@ -1,9 +1,6 @@
 package com.nautical99diary.nautical99diary.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 public class UpdateDto {
 
