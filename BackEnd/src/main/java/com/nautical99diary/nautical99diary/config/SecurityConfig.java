@@ -48,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.addAllowedMethod(HttpMethod.DELETE);
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader(AUTH_HEADER);
+        configuration.addAllowedHeader(AUTH_HEADER);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -82,7 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(formLoginFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http.authorizeRequests()
-                    .antMatchers(AUTH_WHITELIST).permitAll();
+                .antMatchers(AUTH_WHITELIST).permitAll();
 
         http.formLogin().disable();
     }
