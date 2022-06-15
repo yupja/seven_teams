@@ -1,6 +1,6 @@
 package com.nautical99diary.nautical99diary.service;
 
-import com.nautical99diary.nautical99diary.config.auth.PrincipalDetails;
+
 import com.nautical99diary.nautical99diary.config.jwt.JwtDecoder;
 import com.nautical99diary.nautical99diary.domain.Todo;
 import com.nautical99diary.nautical99diary.dto.*;
@@ -22,27 +22,46 @@ public class TodoService {
     private final TodoRepository todoRepository;
     private final TodoRepositoryEM repositoryJPQL;
 
-    public List<Todo> getTodo(String day, PrincipalDetails userDetails) {
-        Long userId = userDetails.getUser().getId();
-        return todoRepository.findAllByGoalDayAndUserID(day,userId);
+    public List<Todo> getTodo(String day, String token) {
+        String username = test(token);
+        return todoRepository.findAllByGoalDayAndUsername(day,username);
     }
 
-    public Todo createTodo(String day, TodoRequestDto todoRequestDto, PrincipalDetails userDetails) {
-        Todo todo = new Todo(day, todoRequestDto,userDetails);
+    public Todo createTodo(String day, TodoRequestDto todoRequestDto, String token) {
+        String username = test(token);
+        Todo todo = new Todo(day, todoRequestDto,username);
         todoRepository.save(todo);
         return todo;
     }
 
-    public UpdateDto.TodoUpdate updateTodo(UpdateDto.TodoUpdate requestDto) {
-        return repositoryJPQL.updateTodo(requestDto);
+    public UpdateDto.TodoUpdate updateTodo(Long id, UpdateDto.TodoUpdate requestDto, String token) {
+        Todo todo = todoRepository.findAllById(id);
+        if(todo.getUsername().equals(test(token))){
+            return repositoryJPQL.updateTodo(requestDto);
+        }else{
+            throw new IllegalArgumentException("회원 정보가 일치하지 않습니다");
+        }
+
     }
 
-    public UpdateDto.CompletionUpdate updateComplete(UpdateDto.CompletionUpdate requestDto) {
-        return repositoryJPQL.updateComplete(requestDto);
+    public UpdateDto.CompletionUpdate updateComplete(Long id,UpdateDto.CompletionUpdate requestDto, String token) {
+        Todo todo = todoRepository.findAllById(id);
+        if(todo.getUsername().equals(test(token))){
+            return repositoryJPQL.updateComplete(requestDto);
+        }else{
+            throw new IllegalArgumentException("회원 정보가 일치하지 않습니다");
+        }
+
     }
 
-    public void deleteTodo(Long id) {
-        repositoryJPQL.deleteTodo(id);
+    public void deleteTodo(Long id, String token) {
+        Todo todo = todoRepository.findAllById(id);
+        if(todo.getUsername().equals(test(token))){
+            repositoryJPQL.deleteTodo(id);
+        }else{
+            throw new IllegalArgumentException("회원 정보가 일치하지 않습니다");
+        }
+
     }
 
     @Transactional

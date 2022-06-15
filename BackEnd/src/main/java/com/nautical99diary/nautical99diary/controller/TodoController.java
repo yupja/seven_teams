@@ -1,11 +1,11 @@
 package com.nautical99diary.nautical99diary.controller;
 
-import com.nautical99diary.nautical99diary.config.auth.PrincipalDetails;
+
 import com.nautical99diary.nautical99diary.domain.Todo;
 import com.nautical99diary.nautical99diary.dto.*;
 import com.nautical99diary.nautical99diary.service.TodoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -17,13 +17,13 @@ public class TodoController {
     private final TodoService todoService;
 
     @GetMapping("/todo/{goalDay}")
-    public List<Todo> getTodo(@PathVariable String goalDay, @AuthenticationPrincipal PrincipalDetails userDetails) {
-        return todoService.getTodo(goalDay, userDetails);
+    public List<Todo> getTodo(@PathVariable String goalDay,@RequestHeader(value = "Authorization", defaultValue = "token") String token) {
+        return todoService.getTodo(goalDay, token);
     }
 
     @PostMapping("/todo/{goalDay}")
-    public Todo createTodo(@PathVariable String goalDay, @RequestBody TodoRequestDto todoRequestDto, @AuthenticationPrincipal PrincipalDetails userDetails) {
-        return todoService.createTodo(goalDay, todoRequestDto, userDetails);
+    public Todo createTodo(@PathVariable String goalDay, @RequestBody TodoRequestDto todoRequestDto,@RequestHeader(value = "Authorization", defaultValue = "token") String token) {
+        return todoService.createTodo(goalDay, todoRequestDto, token);
 
     }
 
@@ -36,9 +36,9 @@ public class TodoController {
      */
     @PostMapping("/todo/{goalDay}/{id}")
     public UpdateDto.TodoUpdate updateTodo
-    (@PathVariable Long id, @RequestBody UpdateDto.TodoUpdate todoUpdate) {
+    (@PathVariable Long id, @RequestBody UpdateDto.TodoUpdate todoUpdate,@RequestHeader(value = "Authorization", defaultValue = "token") String token) {
         todoUpdate.setId(id);
-        return todoService.updateTodo(todoUpdate);
+        return todoService.updateTodo(id,todoUpdate,token);
     }
 
     /**
@@ -50,14 +50,14 @@ public class TodoController {
      */
     @PutMapping("/todo/{goalDay}/{id}")
     public UpdateDto.CompletionUpdate updateComplete
-    (@PathVariable Long id, @RequestBody UpdateDto.CompletionUpdate completionUpdate) {
+    (@PathVariable Long id, @RequestBody UpdateDto.CompletionUpdate completionUpdate,@RequestHeader(value = "Authorization", defaultValue = "token") String token) {
         completionUpdate.setId(id);
-        return todoService.updateComplete(completionUpdate);
+        return todoService.updateComplete(id,completionUpdate,token);
     }
 
     @DeleteMapping("/todo/{goalDay}/{id}")
-    public void deleteTodo(@PathVariable Long id) {
-        todoService.deleteTodo(id);
+    public void deleteTodo(@PathVariable Long id,@RequestHeader(value = "Authorization", defaultValue = "token") String token) {
+        todoService.deleteTodo(id,token);
     }
 
 //    @GetMapping("/test/{uuid}/{username}")
@@ -80,7 +80,7 @@ public class TodoController {
 
 
     @PostMapping("/test2")
-    public String test2(@RequestParam("test") String test) {
-        return todoService.test(test);
+    public String test2(@RequestHeader(value = "Authorization", defaultValue = "token") String token) {
+        return todoService.test(token);
     }
 }

@@ -27,12 +27,12 @@ public class Todo extends Timestamped {
     private String goalDay;
 
     @Column(nullable = false)
-    private Long userID;
+    private String username;
 
-    public Todo(String day, TodoRequestDto todoRequestDto, PrincipalDetails userDetails) {
+    public Todo(String day, TodoRequestDto todoRequestDto, String username) {
         this.goalDay = day;
         this.todo = todoRequestDto.getTodo();
         this.checkComplete = todoRequestDto.isCheckComplete();
-        this.userID = userDetails.getUser().getId();
+        this.username = username;
     }
 }

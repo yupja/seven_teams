@@ -8,7 +8,7 @@ import java.util.*;
 public interface TodoRepository extends JpaRepository<Todo, Long> {
     Optional<Todo> findById(Long id);
 
-    List<Todo> findAllByGoalDayAndUserID(String day,Long userId);
+    List<Todo> findAllByGoalDayAndUsername(String day,String username);
 
     Todo findAllById(Long id);
 
