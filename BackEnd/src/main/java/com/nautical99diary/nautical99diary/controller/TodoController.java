@@ -15,13 +15,15 @@ public class TodoController {
     private final TodoService todoService;
 
     @GetMapping("/todo/{goalDay}")
-    public List<Todo> getTodo(@PathVariable String goalDay) {
-        return todoService.getTodo(goalDay);
+    public List<Todo> getTodo(@PathVariable String goalDay, @RequestHeader(value = "Authorization", defaultValue = "token") String token) {
+        return todoService.getTodo(goalDay, token);
     }
 
     @PostMapping("/todo/{goalDay}")
-    public Todo createTodo(@PathVariable String goalDay, @RequestBody TodoRequestDto todoRequestDto) {
-        return todoService.createTodo(goalDay, todoRequestDto);
+    public Todo createTodo(@PathVariable String goalDay,
+                           @RequestBody TodoRequestDto todoRequestDto,
+                           @RequestHeader(value = "Authorization", defaultValue = "token") String token) {
+        return todoService.createTodo(goalDay, todoRequestDto, token);
 
     }
 
@@ -29,35 +31,34 @@ public class TodoController {
      * updateTodo: todo 내용 업데이트
      *
      * @param id
-     * @param goalDay
      * @param todoUpdate
      * @return UpdateDto.TodoUpdate
      */
     @PostMapping("/todo/{goalDay}/{id}")
     public UpdateDto.TodoUpdate updateTodo
-    (@PathVariable Long id, @PathVariable String goalDay, @RequestBody UpdateDto.TodoUpdate todoUpdate) {
-        // 컨트롤러에서 데이터 가공하는 게 맞을지?
+    (@PathVariable Long id, @RequestBody UpdateDto.TodoUpdate todoUpdate, @RequestHeader(value = "Authorization", defaultValue = "token") String token) {
         todoUpdate.setId(id);
-        return todoService.updateTodo(todoUpdate);
+        return todoService.updateTodo(id, todoUpdate, token);
     }
 
     /**
      * updateComplete: 완료 여부 업데이트
      *
      * @param id
-     * @param goalDay
-     * @param completetionUpdate
+     * @param completionUpdate
      * @return UpdateDto.CompletionUpdate
      */
     @PutMapping("/todo/{goalDay}/{id}")
     public UpdateDto.CompletionUpdate updateComplete
-    (@PathVariable Long id, @PathVariable String goalDay, @RequestBody UpdateDto.CompletionUpdate completetionUpdate) {
-        completetionUpdate.setId(id);
-        return todoService.updateComplete(completetionUpdate);
+    (@PathVariable Long id,
+     @RequestBody UpdateDto.CompletionUpdate completionUpdate,
+     @RequestHeader(value = "Authorization", defaultValue = "token") String token) {
+        completionUpdate.setId(id);
+        return todoService.updateComplete(id, completionUpdate, token);
     }
 
     @DeleteMapping("/todo/{goalDay}/{id}")
-    public void deleteTodo(@PathVariable Long id, @PathVariable String goalDay) {
-        todoService.deleteTodo(id);
+    public void deleteTodo(@PathVariable Long id, @RequestHeader(value = "Authorization", defaultValue = "token") String token) {
+        todoService.deleteTodo(id, token);
     }
 }

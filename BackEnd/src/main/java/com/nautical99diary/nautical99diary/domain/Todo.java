@@ -25,15 +25,13 @@ public class Todo extends Timestamped {
     @Column(nullable = false)
     private String goalDay;
 
-    public Todo(String day,TodoRequestDto todoRequestDto) {
+    @Column(nullable = false)
+    private String username;
+
+    public Todo(String day, TodoRequestDto todoRequestDto, String username) {
         this.goalDay = day;
         this.todo = todoRequestDto.getTodo();
         this.checkComplete = todoRequestDto.isCheckComplete();
-    }
-    @Builder
-    public Todo(boolean checkComplete, String todo, String goalDay) {
-        this.checkComplete = checkComplete;
-        this.todo = todo;
-        this.goalDay = goalDay;
+        this.username = username;
     }
 }
