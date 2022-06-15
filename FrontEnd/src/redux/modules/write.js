@@ -53,8 +53,9 @@ export const postTodo = (write) => {
 export const completeTodo = (write_id) => {
   return function (dispatch) {
     axios
-      .put(`http://whitewise.shop/todo/101010/${write_id}`, {checkComplete: !"true"})
+      .put(`http://whitewise.shop/todo/101010/${write_id}`, {checkComplete: true ?  "true" : "false"})
       .then((response) => {
+        
       });
     dispatch(completeWrite(write_id));
   };

@@ -16,25 +16,12 @@ import Header from "./Header";
 const Home = (props) => {
   const dispatch = useDispatch();
   const Navigate = useNavigate();
-  // const todo_ref = React.useRef(null);
-  // const day_ref = React.useRef(null);
 
   const write_data = useSelector((state) => state.write.list);
 
   React.useEffect(() => {
     dispatch(loadTodo());
   }, [loadTodo]);
-
-  // const postTodoList = () => {
-  //   dispatch(
-  //     postTodo({
-  //       todo: todo_ref.current.value,
-  //       goalDay: day_ref.current.value,
-  //       checkComplete: false,
-  //     })
-  //   );
-  // };
-  console.log(write_data);
 
   return (
     <>
@@ -49,7 +36,6 @@ const Home = (props) => {
 
         <Box>
           {write_data.map((list, index) => {
-            console.log(list);
             return (
               <Todo checkComplete={list.checkComplete} key={index}>
                 <span>
@@ -74,15 +60,11 @@ const Home = (props) => {
             );
           })}
         </Box>
-{/* 
-        <input type="date" ref={day_ref} placeholder="  기간을 입력해주세요" />
-        <input type="text" ref={todo_ref} placeholder="  목표를 입력해주세요" /> */}
 
         <button
           className="Plus"
           onClick={() => {
-            // postTodoList();
-            Navigate("/todo")
+            Navigate("/todo");
           }}
         >
           +
