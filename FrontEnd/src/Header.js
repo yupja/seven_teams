@@ -19,13 +19,11 @@ const Header = () => {
 
     React.useEffect (()=> {             // 쿠키가 있는지없는지 쿠키값 비교
     let cookie = getCookie("authorization");
-        console.log(cookie);
     if(cookie){                         // cookie의 여부에 따라 is_login의 값을 업데이트
         setIsLogin(true);
     }else {
         setIsLogin(false);
     }
-    console.log(setIsLogin)
     });
     const logOut = () => {
         console.log("로그아웃");

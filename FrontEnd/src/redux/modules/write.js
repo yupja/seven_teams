@@ -1,7 +1,7 @@
 // write.js
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { Cookies,CookiesProvider } from "react-cookie";
+import { Cookies } from "react-cookie";
 
 // Actions
 const LOAD = "write/LOAD";
@@ -29,7 +29,7 @@ export function deleteWrite(write_id) {
 
 //로그인 쿠키
 
-const cookies = new Cookies()
+const cookies = new Cookies();
 
 export const getCookie = (name) => {
   return cookies.get(name);
@@ -46,13 +46,15 @@ const einstance = axios.create({
 export const loadTodo = () => {
   return function (dispatch) {
     einstance
-    .get("http://whitewise.shop/todo/202020").then((response) => {
-
-      // console.log(response.data);
-      // response.data.forEach((b) => {
-      //   write_list.push({ todo: b.todo });
-      // }); 이렇게 해서 안됐음 한참걸렸따 가져오기 빠르게 하려고 todo를 넣어줘서
+    .get("http://whitewise.shop/todo/2022-06-18")
+    .then((response) => {
       dispatch(loadWrite([...response.data]));
+      console.log(response);
+
+      // response.data.forEach((b) => {
+      //   write_list.push({ b });
+      // });
+      //이렇게 해서 안됐음 한참걸렸따 가져오기 빠르게 하려고 todo를 넣어줘서
     });
   };
 };
@@ -61,17 +63,19 @@ export const loadTodo = () => {
 export const postTodo = (write) => {
   return function (dispatch) {
     einstance
-      .post("http://whitewise.shop/todo/202020", write)
-      .then((response) => {});
+      .post(`http://whitewise.shop/todo/${write.goalDay}`, data)
+      .then((response) => {
+        console.log(response);
+      });
     dispatch(postWrite(write));
   };
 };
 
 // axios 완료하기
-export const completeTodo = (write_id) => {
+export const completeTodo = (write) => {
   return function (dispatch) {
     einstance
-      .put(`http://whitewise.shop/todo/101010/${write_id}`, {
+      .put(`http://whitewise.shop/todo/${write.goalDay}/${write.id}`, {
         checkComplete: true ? "true" : "false",
       })
       .then((response) => {});
@@ -80,16 +84,16 @@ export const completeTodo = (write_id) => {
 };
 
 // axios 삭제하기
-export const deleteTodo = (write_id) => {
+export const deleteTodo = (write) => {
   return function (dispatch) {
     einstance
-      .delete(`http://whitewise.shop/todo/101010/${write_id}`)
+      .delete(`http://whitewise.shop/todo/${write.goalDay}/${write.id}`)
       .then((response) => {
         // const _write_list = getState().write.list;
         // const write_index = _write_list.findIndex((b) => {
         //   return b.id === write_index;
         // }); 이것도 악시오스 쓸때 필요가 없음
-        dispatch(deleteWrite(write_id));
+        dispatch(deleteWrite(write));
       });
   };
 };

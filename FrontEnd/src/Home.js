@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 
 import {
   loadTodo,
-  postTodo,
   deleteTodo,
   completeTodo,
 } from "./redux/modules/write";
@@ -22,7 +21,7 @@ const Home = (props) => {
   const write_data = useSelector((state) => state.write.list);
 
   // const getTodoList = async () =>  {
-  //   const res = await axios.get("http://whitewise.shop/todo/101010")
+  //   const res = await axios.get("http://whitewise.shop")
   //   console.log(res)
   // }
   // React.useEffect(async() => {
@@ -48,14 +47,16 @@ const Home = (props) => {
 
         <Box>
           {write_data.map((list, index) => {
+            console.log(list)
             return (
+              
               <Todo checkComplete={list.checkComplete} key={index}>
                 <span>
-                  {list.todo} / {list.goalDay}
+                  {list.todo}
                 </span>
                 <button
                   onClick={() => {
-                    dispatch(deleteTodo(list.id));
+                    dispatch(deleteTodo(list));
                   }}
                 >
                   삭제
@@ -63,7 +64,7 @@ const Home = (props) => {
                 <button
                   className="list_item"
                   onClick={() => {
-                    dispatch(completeTodo(list.id));
+                    dispatch(completeTodo(list));
                   }}
                 >
                   완료
