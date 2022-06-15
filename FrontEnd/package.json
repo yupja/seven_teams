@@ -14,12 +14,9 @@
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
     "axios": "^0.27.2",
-<<<<<<< HEAD
     "firebase": "^9.8.3",
     "http-proxy-middleware": "^2.0.6",
-=======
     "global": "^4.4.0",
->>>>>>> 70b9742 (로그인,토큰 받기)
     "react": "^18.1.0",
     "react-cookie": "^4.1.1",
     "react-dom": "^18.1.0",

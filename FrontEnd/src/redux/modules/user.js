@@ -5,8 +5,6 @@ import instance from "../../shared/Request";
 // import { setCookie, getCookie, deleteCookie } from "../../cookie";
 // import { Cookies, CookiesProvider } from 'react-cookie';
 
-
-
 const LOGIN = "LOGIN"
 const SIGNUP = "SIGNUP"
 const LOGOUT = "LOGOUT"
@@ -159,9 +157,6 @@ const einstance = axios.create({
 export const loadTodo = () => {
     return function (dispatch) {
         einstance.get("http://whitewise.shop/todo/101010").then((response) => {
-            getCookie("Authorization")
-            debugger
-        console.log(response);
   
         // response.data.forEach((b) => {
         //   write_list.push({ todo: b.todo });

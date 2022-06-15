@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,11 +18,22 @@ const Home = (props) => {
   const dispatch = useDispatch();
   const Navigate = useNavigate();
 
+
   const write_data = useSelector((state) => state.write.list);
+
+  // const getTodoList = async () =>  {
+  //   const res = await axios.get("http://whitewise.shop/todo/101010")
+  //   console.log(res)
+  // }
+  // React.useEffect(async() => {
+  //   getTodoList();
+  // }, []);
 
   React.useEffect(() => {
     dispatch(loadTodo());
-  }, [loadTodo]);
+  }, []);
+
+
 
   return (
     <>

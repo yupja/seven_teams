@@ -1,6 +1,7 @@
 // write.js
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { Cookies,CookiesProvider } from "react-cookie";
 
 // Actions
 const LOAD = "write/LOAD";
@@ -26,10 +27,27 @@ export function deleteWrite(write_id) {
   return { type: DELETE, write_id };
 }
 
+//로그인 쿠키
+
+const cookies = new Cookies()
+
+export const getCookie = (name) => {
+  return cookies.get(name);
+};
+
+const einstance = axios.create({
+  baseURL: "",
+  headers: {
+    Authorization: getCookie("Authorization"),
+  },
+});
+
 // axios 가져오기
 export const loadTodo = () => {
   return function (dispatch) {
-    axios.get("http://whitewise.shop/todo/101010").then((response) => {
+    einstance
+    .get("http://whitewise.shop/todo/202020").then((response) => {
+
       // console.log(response.data);
       // response.data.forEach((b) => {
       //   write_list.push({ todo: b.todo });
@@ -42,8 +60,8 @@ export const loadTodo = () => {
 // axios 추가하기
 export const postTodo = (write) => {
   return function (dispatch) {
-    axios
-      .post("http://whitewise.shop/todo/101010", write)
+    einstance
+      .post("http://whitewise.shop/todo/202020", write)
       .then((response) => {});
     dispatch(postWrite(write));
   };
@@ -52,20 +70,19 @@ export const postTodo = (write) => {
 // axios 완료하기
 export const completeTodo = (write_id) => {
   return function (dispatch) {
-    axios
-      .put(`http://whitewise.shop/todo/101010/${write_id}`, {checkComplete: true ?  "true" : "false"})
-      .then((response) => {
-        
-      });
+    einstance
+      .put(`http://whitewise.shop/todo/101010/${write_id}`, {
+        checkComplete: true ? "true" : "false",
+      })
+      .then((response) => {});
     dispatch(completeWrite(write_id));
   };
 };
 
-
 // axios 삭제하기
 export const deleteTodo = (write_id) => {
   return function (dispatch) {
-    axios
+    einstance
       .delete(`http://whitewise.shop/todo/101010/${write_id}`)
       .then((response) => {
         // const _write_list = getState().write.list;

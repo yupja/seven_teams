@@ -2,20 +2,13 @@
 //리듀서들을 묶어서 createStore에 넣어줌
 import {createStore, combineReducers, applyMiddleware} from "redux";
 import thunk from "redux-thunk";
-<<<<<<< HEAD
 import write from "./modules/write";
-=======
 import user from "./modules/user";
->>>>>>> 70b9742 (로그인,토큰 받기)
 
 // root 리듀서를 만들어줍니다.
 // 나중에 리듀서를 여러개 만들게 되면 여기에 하나씩 추가해주는 거예요!
 const middlewares = [thunk];
-<<<<<<< HEAD
-const rootReducer = combineReducers({ write });
-=======
-const rootReducer = combineReducers({ user });
->>>>>>> 70b9742 (로그인,토큰 받기)
+const rootReducer = combineReducers({ write,user });
 const enhancer = applyMiddleware(...middlewares);
 
 // 스토어를 만듭니다.
