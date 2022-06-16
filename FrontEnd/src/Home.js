@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import Header from "./Header";
 import todologo from "./img/todologo.png";
+import axios from "axios";
 
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,12 +19,14 @@ const Home = (props) => {
   const write_data = useSelector((state) => state.write.list);
 
   // const getTodoList = async () =>  {
-  //   const res = await axios.get("http://whitewise.shop")
-  //   console.log(res)
-  // }
+  //   const res = await axios.get("http://whitewise.shop/todo/2022-06-18")
+  //   .then((response) => {
+  //     dispatch(loadWrite([...response.data]));
+  // });
   // React.useEffect(async() => {
   //   getTodoList();
   // }, []);
+  // };
 
   React.useEffect(() => {
     dispatch(loadTodo());
@@ -34,13 +37,7 @@ const Home = (props) => {
       <Header />
 
       <Container>
-        <LogoImage
-          alt="todologo"
-          src={todologo}
-          onClick={() => {
-            Navigate(`/`);
-          }}
-        />
+        <LogoImage alt="todologo" src={todologo} />
         <Date>
           {/* 인풋버튼 만들어 네비게이트 써볼까?? 날짜 고르면 뜰수있게 */}
           <span>◀</span>
@@ -80,13 +77,17 @@ const Home = (props) => {
         >
           +
         </button>
+        <button className="Up"
+        onClick={()=> {
+          window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+        }}>UP</button>
       </Container>
     </>
   );
 };
 
 const LogoImage = styled.img`
-  width: 20%; 
+  width: 20%;
   margin: 20px 330px;
 `;
 
@@ -108,6 +109,23 @@ const Container = styled.div`
     justify-content: center;
     align-items: center;
     display: flex;
+  }
+  .Plus {
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    background-color: gray;
+    border: 1px dark;
+    border-radius: 50%;
+    font-size: 50px;
+    cursor: pointer;
+    color: white;
+    background-color: #292929;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    :hover{
+      background-color: #d0d0d0;
   }
   .Plus {
     width: 100px;
