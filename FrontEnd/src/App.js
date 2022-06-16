@@ -5,6 +5,7 @@ import Home from "./Home";
 import Todo from "./Todo";
 import Login from "./Login";
 import Signup from "./Signup";
+import {changeName} from "./redux/modules/writeSlice";
 
 function App() {
   return (

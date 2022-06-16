@@ -77,7 +77,7 @@ const Header = () => {
 };
 
 const Head = styled.div`
-    height: 72px;
+    height: 85px;
     width: 1296px;
     background: white;
     margin: 0 auto;
@@ -86,7 +86,7 @@ const Head = styled.div`
 `
 
 const Sign = styled.button`
-    height: 50px;
+    height: 60px;
     width: 100px;
     background: none;
     display: flex;

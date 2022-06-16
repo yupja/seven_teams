@@ -13,7 +13,7 @@ const Todo = (props) => {
 
   const todo_ref = React.useRef(null);
   const day_ref = React.useRef(null);
-  
+
   const postTodoList = () => {
     dispatch(
       postTodo({
@@ -69,17 +69,23 @@ const Container = styled.div`
   height: 600px;
   margin: 20px auto;
   padding: 16px;
-  border: 1px solid;
+  border: 3px solid;
+  border-radius: 30px;
   text-align: center;
-
-  & h1 {
-  }
 
   & button {
     width: 300px;
-    height: 30px;
+    height: 50px;
     margin: 20px;
+    border: 3px solid;
+    border-radius: 30px;
+    color: white;
+    background-color: #292929;
+    :hover{
+      background-color: #d0d0d0;
   }
+
+}
 `;
 
 const Box = styled.div`
@@ -87,21 +93,21 @@ const Box = styled.div`
   height: 280px;
   margin: auto;
   padding: 16px;
-  border: 1px solid;
+  border: 3px solid;
+  border-radius: 30px;
   & p {
     text-align: left;
+    font-size: 20px;
+    font-weight: bold;
   }
   & input {
-    width: 150px;
+    width: 100px;
     display: flex;
-    flex-direction: column;
-    list-style-type: none;
   }
 
   .content {
     width: 580px;
     height: 100px;
-    
   }
 `;
 
