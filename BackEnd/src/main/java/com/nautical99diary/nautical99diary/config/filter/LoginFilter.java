@@ -1,8 +1,11 @@
 package com.nautical99diary.nautical99diary.config.filter;
 
 import com.fasterxml.jackson.databind.*;
+import com.nautical99diary.nautical99diary.config.auth.PrincipalDetailsService;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.*;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.http.*;
@@ -12,12 +15,19 @@ import javax.servlet.http.*;
  * UsernamePasswordAuthenticationFilter 는 사용자가 보낸 아이디와 비밀번호를 인터셉트한다.
  * */
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
-    final private ObjectMapper objectMapper;
 
-    public LoginFilter(final AuthenticationManager authenticationManager) {
+    final private ObjectMapper objectMapper;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PrincipalDetailsService principalDetailsService;
+
+    public LoginFilter(final AuthenticationManager authenticationManager,
+                       BCryptPasswordEncoder bCryptPasswordEncoder,
+                       PrincipalDetailsService principalDetailsService) {
+
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.principalDetailsService = principalDetailsService;
         super.setAuthenticationManager(authenticationManager);
-        objectMapper = new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     /*
@@ -33,6 +43,13 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
             JsonNode requestBody = objectMapper.readTree(request.getInputStream());
             String username = requestBody.get("username").asText();
             String password = requestBody.get("password").asText();
+
+            String dbPassword = principalDetailsService.loadUserByUsername(username).getPassword();
+
+            if (!bCryptPasswordEncoder.matches(password, dbPassword)) {
+                throw new RuntimeException("비빌번호가 틀렸습니다.");
+            }
+
             authRequest = new UsernamePasswordAuthenticationToken(username, password);
         } catch (Exception e) {
             throw new RuntimeException("username, password 입력이 필요합니다. (JSON)");

@@ -1,8 +1,11 @@
 package com.nautical99diary.nautical99diary.config;
 
+import com.nautical99diary.nautical99diary.config.auth.PrincipalDetailsService;
 import com.nautical99diary.nautical99diary.config.filter.LoginFilter;
 import com.nautical99diary.nautical99diary.config.handler.LoginSuccessHandler;
 import com.nautical99diary.nautical99diary.config.provider.FormLoginAuthProvider;
+import com.nautical99diary.nautical99diary.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.*;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -17,7 +20,10 @@ import static com.nautical99diary.nautical99diary.config.handler.LoginSuccessHan
 @Configuration
 @EnableWebSecurity // 스프링 Security 지원을 가능하게 함
 @EnableGlobalMethodSecurity(securedEnabled = true) // @Secured 어노테이션 활성화
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final PrincipalDetailsService principalDetailsService;
 
     private static final String[] AUTH_WHITELIST = {
             "/",
@@ -39,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3000");
         configuration.addAllowedOrigin("http://sparta-mhl.shop");
+        configuration.addAllowedOrigin("http://sparta-mhl.shop.s3-website.ap-northeast-2.amazonaws.com");
         configuration.addAllowedHeader("Content-Type");
         configuration.addAllowedHeader("Custom-Header");
         configuration.addAllowedMethod(HttpMethod.POST);
@@ -58,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public LoginFilter formLoginFilter() throws Exception {
-        LoginFilter loginFilter = new LoginFilter(authenticationManager());
+        LoginFilter loginFilter = new LoginFilter(authenticationManager(), encodePassword(), principalDetailsService);
         loginFilter.setFilterProcessesUrl("/user/login");
         loginFilter.setAuthenticationSuccessHandler(formLoginSuccessHandler());
         loginFilter.afterPropertiesSet();
