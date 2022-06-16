@@ -38,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedOrigin("http://sparta-mhl.shop");
         configuration.addAllowedHeader("Content-Type");
         configuration.addAllowedHeader("Custom-Header");
         configuration.addAllowedMethod(HttpMethod.POST);
