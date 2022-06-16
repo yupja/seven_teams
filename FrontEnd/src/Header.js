@@ -1,11 +1,11 @@
 import React from "react"
 import styled from "styled-components";
 
-import HomeIcon from "@material-ui/icons/Home";
+import todologo from "./img/todologo.png"
 
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-// import { Cookies,CookiesProvider } from "react-cookie";
+import { Cookies,CookiesProvider } from "react-cookie";
 import { getCookie } from "./redux/modules/user";
 
 import { logOutCO } from "./redux/modules/user";
@@ -14,53 +14,60 @@ const Header = () => {
     const Navigate = useNavigate();
     const dispatch = useDispatch();
 
+    const user = useSelector((state) => state.user);
+    
     const [is_login, setIsLogin] = React.useState(false);
-    // const is_login = useSelector((state) => state.user.is_login);
+    console.log("default",is_login);
 
-    React.useEffect (()=> {             // 쿠키가 있는지없는지 쿠키값 비교
-    let cookie = getCookie("authorization");
-    if(cookie){                         // cookie의 여부에 따라 is_login의 값을 업데이트
+   const deleteCookie = (is_login) => {
+        let date = new Date("2021-01-01").toUTCString();
+        document.cookie = "Authorization" + "=; expires=" + date;
+        console.log(document.cookie)
+        setIsLogin(false);
+        dispatch(logOutCO);
+        window.location.reload();
+    }
+
+    React.useEffect (()=> {             
+    let cookie = getCookie("Authorization");
+    // let cookie = loadCookie;
+        // console.log(cookie);
+    if(cookie != null){  
         setIsLogin(true);
+        // console.log("쿠키",is_login);
     }else {
         setIsLogin(false);
+        // console.log("cookienull",is_login);
     }
-    });
-    const logOut = () => {
-        console.log("로그아웃");
-        dispatch(logOutCO);
+    // console.log(setIsLogin)
+    // console.log(getCookie("Authorization"),"확인")
+    },[user]);
 
-    if (is_login){                      //is_login이 true일때만 보여줘라
+
+    if (is_login){      
         return(
             <Head>
-            <HomeIcon  style={{margin: "0 0 0 25px"}}
-              margin="0px"
-              cursor="pointer"
-              onClick={() => {
+            <LogoImage 
+            alt="todologo"
+            src={todologo}
+            onClick={() => {
                 Navigate(`/`)
             }}
-            >
-            </HomeIcon>
+            />
             <Blank></Blank>
-            {/* <Sign 
-            onClick={() => {
-                Navigate(`/signup`)
-            }}
-            >회원가입</Sign> */}
-            <Log onClick={logOut}>로그아웃</Log>
+            <Log onClick={deleteCookie}>로그아웃</Log>
         </Head>
-            )}
-        }
-    
+            )
+        }else{
     return (
         <Head>
-            <HomeIcon  style={{margin: "0 0 0 25px"}}
-              margin="0px"
-              cursor="pointer"
-              onClick={() => {
+            <LogoImage 
+            alt="todologo"
+            src={todologo}
+            onClick={() => {
                 Navigate(`/`)
             }}
-            >
-            </HomeIcon>
+            />
             <Blank></Blank>
             <Sign 
             onClick={() => {
@@ -73,8 +80,9 @@ const Header = () => {
             }}
             >로그인</Log>
         </Head>
-    );
+    )};
 };
+
 
 const Head = styled.div`
     height: 85px;
@@ -87,12 +95,16 @@ const Head = styled.div`
 
 const Sign = styled.button`
     height: 60px;
+<<<<<<< HEAD
     width: 100px;
+=======
+    width: 120px;
+>>>>>>> a005bcc (최종)
     background: none;
     display: flex;
     justify-content : center;
     align-items: center;
-    font-size: 20px;
+    font-size: 23px;
     border: none;
     font-weight:bolder ;
     &:hover {
@@ -105,18 +117,22 @@ const Blank = styled.div`
 `
 
 const Log = styled.button`
-    height: 50px;
-    width: 100px;
+    height: 60px;
+    width: 120px;
     background: none;
     display: flex;
     justify-content : center;
     align-items: center;
-    font-size: 20px;
+    font-size: 23px;
     border: none;
     font-weight:bolder ;
     &:hover {
         color: gray;
     }
+`;
+const LogoImage = styled.img`
+width: 5%;
+margin-left: 10px;
 `;
 
 

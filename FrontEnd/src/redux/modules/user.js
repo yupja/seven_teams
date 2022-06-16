@@ -1,9 +1,10 @@
 import axios from "axios";
-import { Cookies,CookiesProvider } from "react-cookie";
+import { Cookies,CookiesProvider} from "react-cookie";
 import { Navigate } from "react-router";
+import { createAction, createReducer, createSlice, createSelector } from "@reduxjs/toolkit";
 import instance from "../../shared/Request";
-// import { setCookie, getCookie, deleteCookie } from "../../cookie";
-// import { Cookies, CookiesProvider } from 'react-cookie';
+
+
 
 const LOGIN = "LOGIN"
 const SIGNUP = "SIGNUP"
@@ -40,9 +41,9 @@ export function signupAction(){
     return {type : SIGNUP, initialState}
 }
 
-export function loginAction(newUserState){
+export function loginAction(initialState){
     console.log("login action");
-    return {type : LOGIN, newUserState}
+    return {type : LOGIN, initialState}
 }
 
 export function logoutAction(newUserState){
@@ -73,16 +74,16 @@ export const signupCO = (username, password, passwordCheck, nickname) => {
             nickname : nickname,
             password : password,
             passwordCheck : passwordCheck}
- return function (dispacth ,{history}) {
+ return function (dispacth, {history}) {
         axios.post("http://whitewise.shop/user/signup",data
         // axios.post("http://localhost:5001/users",data
         ).then(response => {
+          
             console.log(response);
+            alert("회원가입이 완료되었습니다.")
             
         })
-        // history.push("/login");
     }
-
 }
 const cookies = new Cookies()
 
@@ -108,7 +109,6 @@ export const loginCO = (username, password) => {
         // axios.post("http://localhost:5001/users",data
         ).then(response => {
             setCookie("Authorization", response.headers.authorization, {
-            // setCookie("authorization","임시토큰", {
                 'path' : '/',
                 'secure' : true,
                 'sameSite' : 'none'
@@ -119,16 +119,17 @@ export const loginCO = (username, password) => {
                     is_login: true
                 }
              ))
-            // setCookie("Authorization", response.headers.authorization.split(" ")[1]);
-            // setCookie("username", username);
-                console.log("로그인 서버요청");
-        })
+        const result = response.data.authorization;
+        if (result) {
+          dispacth(loginAction({is_login: true}));
+    }})
         .catch(error => {
             alert("아이디 또는 비밀번호를 확인해주세요.")
             console.log("Login Error", error)
           })
     }
 }
+
                                                                                                     // fetch 로그인 시도해보기 ! 
 export const idCheck=(username)=>{
     return function(dispatch){
@@ -137,7 +138,7 @@ export const idCheck=(username)=>{
       .get(`http://whitewise.shop/user/idCheck/${username}`)
       .then(response=>{
         if(response.data===true){
-          alert("사용가능한 아이디입니다.");
+          alert("사용 가능한 아이디입니다.");
         }else{
           alert("중복된 아이디입니다.");
         }
@@ -145,30 +146,54 @@ export const idCheck=(username)=>{
     }
 }
 
+export const nickCheck=(nickname)=>{
+    return function(dispatch){
+       axios
+      .get(`http://whitewise.shop/user/nicknameCheck/${nickname}`)
+      .then(response=>{
+        if(response.data===true){
+          alert("사용 가능한 닉네임입니다.");
+        }else{
+          alert("중복된 닉네임입니다.");
+        }
+      })
+    }
+}
+
 // axios 가져오기
-const einstance = axios.create({
+export const einstance = axios.create({
     baseURL: '',
     headers: {
        "Authorization": getCookie("Authorization"),
-    //    "Access-Control-Allow-Origin" : "http://whitewise.shop/todo/101010",
-    //    "Content-Type": "application/x-www-form-urlencoded"
     }
  })
-export const loadTodo = () => {
+export const loadCookie = () => {
     return function (dispatch) {
         einstance.get("http://whitewise.shop/todo/101010").then((response) => {
-  
-        // response.data.forEach((b) => {
-        //   write_list.push({ todo: b.todo });
-        // }); 이렇게 해서 안됐음 한참걸렸따 가져오기 빠르게 하려고 todo를 넣어줘서
+        // einstance.get("http://localhost:5001/").then((response) => {
+            getCookie("Authorization")
+        console.log(response);
         
       });
     };
   };
 
+export const deleteCookie=(name)=>{
+        let date =new Date("2020-01-01").toUTCString();
+        console.log(date);
+        document.cookie =name+"=; expires="+date;
+};
+
+export const logOutCOt =(dispatch,{history})=>{
+    console.log("로그아웃")
+    dispatch(logoutAction());
+    history.replace('/');
+    window.location.reload();
+  }
+
 export const logOutCO = (receiveUserInfo) =>{
+    
     return function (dispatch){
-        // headers.clear();
         const logOutInfo ={
             nickname: "비회원",
             is_login : false
@@ -188,7 +213,7 @@ export default function reducer(state = initialState, action = {}) {
         }
 
         case "LOGIN":{
-            return {list : initialState}
+            return {list : action.initialState}
         }
 
         case "LOGUT":{

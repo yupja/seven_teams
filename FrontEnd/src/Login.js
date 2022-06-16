@@ -1,14 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import axios from "axios";
 import { loginCO } from "./redux/modules/user";
 
 import { useDispatch } from "react-redux";
 
 import Header from "./Header"
 import { Navigate, useNavigate } from "react-router";
-import {loadTodo} from "./redux/modules/user";
-
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -31,28 +28,23 @@ const Login = () => {
         Navigate("/");
     }
 
-    const LoginTodo = () => {
-        dispatch(loadTodo());
-    }
-
     return (
         <>
-        {/* <Header/> */}
+        <Header/>
         <Box>
             <h1>로그인</h1>
             <Ul>
+                <Text>아이디</Text>
                 <Li>
-                    <Text>아이디</Text>
                     <Input ref={id_ref}></Input>
                 </Li>
+                <Text>비밀번호</Text>
                 <Li>
-                    <Text>비밀번호</Text>
-                    <Input ref={pw_ref}></Input>
+                    <Input ref={pw_ref} type="password"></Input>
                 </Li>
             </Ul>
 
             <Btnlog onClick={LoginDispatch}>로그인</Btnlog>
-            <Btnlog onClick={LoginTodo}>로21그인</Btnlog>
             <Btnsign onClick={() => {
                 Navigate(`/signup`)
             }}>회원가입</Btnsign>
@@ -69,11 +61,22 @@ margin-top: 50px;
 `;
 
 const Text = styled.span`
-
+font-size: 20px;
+text-align: left;
+margin-top: 20px;
+margin-bottom: 7px;
 `; 
 
 const Input = styled.input`
-
+width: 550px;
+height: 50px;
+font-size: 30px;
+/* font-weight: 800; */
+border: none;
+border-bottom:3px solid #292929;
+:focus{
+    outline: none;
+}
 `;
 
 const Ul = styled.ul`
@@ -90,11 +93,33 @@ margin-bottom: 10px;
 `;
 
 const Btnlog = styled.button`
-
+color: white;
+background-color: #292929;
+width: 570px;
+height: 80px;
+margin-top: 50px;
+margin-right: 50px;
+border: none;
+border-radius: 50px;
+font-size: 20px;
+:hover{
+    background-color: #d0d0d0;
+}
 `;
 
 const Btnsign = styled.button`
-
+color: white;
+background-color: #292929;
+width: 570px;
+height: 80px;
+margin-top: 20px;
+margin-right: 50px;
+border: none;
+border-radius: 50px;
+font-size: 20px;
+:hover{
+    background-color: #d0d0d0;
+}
 `;
 
 export default Login;
